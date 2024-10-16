@@ -1,9 +1,11 @@
+clear all;
 a=fi( 1.625,0,8,7); a.bin;
 b=fi( 0.375,0,8,7); b.bin;
 c=fi( 0.375,1,8,7); c.bin;
 d=fi(-0.375,1,8,7); d.bin;
 
-pi_frac = pi - 3; % 0.1416
+% pi_val = pi
+pi_frac = pi - floor(pi),
 
 e = fi( pi_frac,0,8,7), e.bin,   % 00010010
 % 2^-6 + 2^-3 = 9/64,
@@ -15,4 +17,8 @@ g = fi( pi_frac,0,16,15), g.bin, % 0001001000100000
 
 h = fi(-pi_frac,1,16,15), h.bin, % 1110110111100000
 
-% error_8_unsigned = abs(pi - f /(2^8)),
+format long,
+error1 = abs(pi-3+e),
+error2 = abs(pi-3+f),
+error3 = abs(pi-3+g),
+error4 = abs(pi-3+h),
