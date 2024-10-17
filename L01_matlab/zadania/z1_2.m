@@ -1,5 +1,5 @@
 clear all; close all;
-a = 1; b = 5; c = 6;
+a = -1; b = 2; c = 4;
 function y = quadratic(x,a,b,c)
 y = a*x.^2 + b*x + c;
 end
@@ -21,7 +21,6 @@ if a > 0
         y = e;
         x = ending;
     end
-    y = max(quadratic(start,a,b,c),quadratic(ending,a,b,c));
 else
     p = -b/2*a;
     x = p;

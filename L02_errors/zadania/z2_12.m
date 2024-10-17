@@ -4,7 +4,7 @@ f2 = @(x) sqrt(x)/(sqrt(x+1) + sqrt(x));
 format long e
 for i = 0:15
     x = 10^i;
-    fprintf("At x= %d, f1(x)=%.18f, f2(x)=%.18f\n",x,f1(x),f2(x));
+    fprintf("At x= %16d, f1(x)=%.18f, f2(x)=%.18f\n",x,f1(x),f2(x));
     if i>13
         sx = sqrt(x+1);
         s = sqrt(x);
