@@ -1,26 +1,37 @@
-% Funkcja obliczająca B-splajn kubiczny B_{j,3}(x)
-function B_j3 = B_spline(x, x_j)
-    % Oblicz przesunięcie u względem punktu x_j
-    u = x - x_j;
-    % Inicjalizacja macierzy wynikowej B_j3 o tych samych rozmiarach co u
-    B_j3 = zeros(size(u));
-    
-    % Przypisanie wartości funkcji B-splajnu w każdym przedziale
-    B_j3(1 <= u & u < 2) = ((1 - u(1 <= u & u < 2)).^3) / 6;
-    B_j3(0 <= u & u < 1) = (3 * u(0 <= u & u < 1).^3 - 6 * u(0 <= u & u < 1).^2 + 4) / 6;
-    B_j3(-1 <= u & u < 0) = (-3 * u(-1 <= u & u < 0).^3 + 3 * u(-1 <= u & u < 0).^2 + 3 * u(-1 <= u & u < 0) + 1) / 6;
-    B_j3(-2 <= u & u < -1) = (u(-2 <= u & u < -1).^3) / 6;
+clear all;
+x_j = 0;
+x = linspace(-2, 2, 1000);
+
+% przesunięcie u względem punktu x_j
+u = x - x_j;
+
+B_j3 = zeros(size(u));
+
+% obliczenie kubicznych B-splajnów dla węzłów równoodległych
+for i = 1:length(u)
+    if 1 <= u(i) && u(i) <= 2
+        B_j3(i) = ((1 - u(i))^3) / 6;
+    elseif 0 <= u(i) && u(i) < 1
+        B_j3(i) = (3 * u(i)^3 - 6 * u(i)^2 + 4) / 6;
+    elseif -1 <= u(i) && u(i) < 0
+        B_j3(i) = (-3 * u(i)^3 + 3 * u(i)^2 + 3 * u(i) + 1) / 6;
+    elseif -2 <= u(i) && u(i) < -1
+        B_j3(i) = (u(i)^3) / 6;
+    end
 end
 
-% Parametry wykresu
-x_j = 0; % Możemy przyjąć x_j = 0 dla uproszczenia
-x = linspace(-3, 3, 1000); % Zakres wartości x dla wykresu
-B_j3_values = B_spline(x, x_j); % Obliczanie wartości B-splajnu dla x
 
-% Rysowanie wykresu
+% rysowanie wykresu
 figure;
-plot(x, B_j3_values, 'LineWidth', 2);
+plot(x, B_j3, 'LineWidth', 2);
 xlabel('x');
 ylabel('B_{j,3}(x)');
-title('Kubiczny B-splajn zdefiniowany przez wzór (5.36)');
 grid on;
+
+% sprawdzenie
+
+% https://www.geogebra.org/graphing?lang=en 
+% f: y=(((1-x)^(3))/(6))
+% f: y=((3x^(3)-6x^(2)+4)/(6))
+% f: y=((-3x^(3)+3x^(2)+3x+1)/(6))
+% f: y=((x^(3))/(6))

@@ -1,18 +1,29 @@
 % interp_lagrange.m
-clear all; close all;;
+clear all; close all;
 x = [5, 6, 8, 11]; y = [-2, 3, 7, 10]; % zadane punkty = wezly
-xi = [5: 0.05 : 13]; % gdzie obliczyc nowe wartosci funkcji
-disp(length(xi));
+xi = 5: 0.05 : 15; % gdzie obliczyc nowe wartosci funkcji
+% disp(length(xi));
 [yi,a] = funTZ_lagrange(x,y,xi); % nasza funkcja interpolujaca
 yii = polyval(a,xi); % oblicz wartosci wielomianu "a" w punktach "xi"
-a, % obliczone wsp. wielomianu: aN,...,a1,a0
+a; % obliczone wsp. wielomianu: aN,...,a1,a0
 figure; plot(x,y,'ro',xi,yi,'k',xi,yii,'b-'); title('y=f(x)'); % rysunek
-fprintf('Wartość temperatury o 7:15 to %.2fC',polyval(a,7.25));
+fprintf('Wartość temperatury o 7:15 to %.2fC\n',polyval(a,7.25));
 
 y_s = polyval(a,xi(1));
 i=1;
-while(y_s < 0)
+while(y_s < 1)
     y_s = polyval(a,xi(i));
     i = i + 1;
 end
-x_s = xi(i),
+x_s = xi(i);
+godzina = floor(x_s);
+minuta = round((x_s - godzina)*60); 
+fprintf('Temperatura przekroczyła 1C o godzinie %d:%d\n',godzina, minuta);
+
+% dostarczenie świeżego pomiaru o 14
+x = [5, 6, 8, 11, 14];
+y = [-2, 3, 7, 10, 14];
+xi = 5: 0.05 : 15;
+[yi,a] = funTZ_lagrange(x,y,xi);
+yii = polyval(a,xi);
+figure; plot(x,y,'ro',xi,yi,'k',xi,yii,'b-'); title('y=f(x)');
