@@ -75,7 +75,7 @@ xlabel('x'); title('y(x)'); grid;
 
 
 for i = 1:n
-    x_vals = linspace(x(i), x(i+1), 100);
+    x_vals = linspace(x(i), x(i+1), 1000);
     y_vals = wsp((i-1)*4 + 1)*x_vals.^3 + wsp((i-1)*4 + 2)*x_vals.^2 + wsp((i-1)*4 + 3)*x_vals + wsp((i-1)*4 + 4);
     % plot(x_vals, y_vals, 'b', 'LineWidth', 1.5, 'DisplayName', ['Przedział ' num2str(i)]);
     plot(x_vals, y_vals, 'b');
