@@ -11,7 +11,7 @@ A = [   3 1 2 3 4;
 [N, N] = size(A);
 
 V = eye(N);
-while (~isdiag(A))
+while (1)
     [x,p,q] = findmax(A);
     if x < 0.0001
         break;

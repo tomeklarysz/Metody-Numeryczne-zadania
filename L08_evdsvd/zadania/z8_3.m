@@ -1,4 +1,3 @@
-% evd_power.m
 clear all; close all;
 
 if(0) A = [ 4 0.5; 0.5 1 ];       % wybor/definicja symetrycznej macierzy kwadratowej
@@ -15,9 +14,9 @@ for i = 1:20                      % poczatek petli
     x_n = y/norm(y);
     lambda = ymax;                % wartosc wlasna ymax=y(imax)
 end                               % koniec petli
-x, x_n, lambda,                        % pokaz wynik: max wartosc wlasna i wektor wlasny
+x, x_n, lambda,                   
 [ V, D ] = eig(A)                 % porownaj z funkcja Matlaba  
     
-% różnica chyba tkwi w normalizacji-
+% różnica tkwi w normalizacji-
 % w implementacji matlabowego eig()
 % normalizujemy inaczej (L2)
