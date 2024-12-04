@@ -10,14 +10,11 @@ x = 0 : 0.01 : 2*pi;
 % figure; plot( x, f(x), 'b-', x, fp(x),'r-'); grid; xlabel('x'); title('f(x), fp(x)');
 % legend('Funkcja','Jej pochodna'); pause
 
-cb = nonlinsolvers( f, fp, a, b, 'bisection', it );
-% figure; plot( 1:it,cb,'o-'); xlabel('iter'); title('c(iter)')
+cr = mynonlinsolvers( f, fp, a, b, 'sieczne', it );
+% figure; plot( 1:it,cr,'o-'); xlabel('iter'); title('c(iter)');
 
-blad = abs(pi - cb(it));
-ek = (b-a)/(2^(it));
-
+blad = abs(pi - cr(it));
 fprintf("blad: %.6f\n",blad);
-% fprintf("zbieznosc liniowa: %.6f\n",ek)
 
 a  = pi-pi/5; b=pi+pi/5;
 [cd,k] = nonlinsolversWhile(f, fp, a, b, pi);
@@ -35,7 +32,7 @@ kat = 45;
 % f(x) = ax^2 + (1-4a)x + (4a-2)
 a1 = 4;
 fc = @(x) a1*x.^2 + (1-4*a1)*x + 4*a1 - 2;
-fcp = @(x) 2*a1*x - 4*a1 + 1;
+fcp = @(x) 2*a1*x - 4*a + 1;
 stc = @(x) tan(kat)*(x-x0) + fc(x0);
 
 % 10 stopni
@@ -60,14 +57,13 @@ figure;
 plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80');
 
 [p1, k1] = nonlinsolversWhile(fc,fcp,a,b,x0);
-fprintf("45 stopni wynik = %.6f : liczba iteracji: %d\n",p1,k1);
+fprintf("45 stopni: wynik: %.6f, liczba iteracji: %d\n",p1,k1);
 [p2, k2] = nonlinsolversWhile(fk,fkp,a,b,x0);
 fprintf("10 stopni wynik = %.6f : liczba iteracji: %d\n",p2,k2);
 [p3, k3] = nonlinsolversWhile(fs,fsp,a,b,x0);
 fprintf("80 stopni wynik = %.6f : liczba iteracji: %d\n",p3,k3);
+% figure; plot( 1:28,p2,'o-'); xlabel('iter'); title('c(iter)')
 
-% wychodzi na to, ze nachylenie krzywej wokol miejsca zerowego nie ma
-% znaczenia gdy stosujemy metode bisekcji
 
 % bez podania liczby iteracji, blad = 0.001%
 function [zk,it] = nonlinsolversWhile(f, fp, a, b, sol)
@@ -76,16 +72,42 @@ zk = 0;
 dok = 0.00001;
 min = sol * dok;
 c = a;
-
 while (abs(sol - zk) > min)
   fa = feval(f,a); fb=feval(f,b); fc=feval(f,c); fpc=feval(fp,c);  % oblicz
   if( fa*fc<0 ) b=c; else a=c; end
-  c = (a+b)/2;
+  c = b - (fb*(b-a))/(fb-fa);
+  if abs(c-a) < abs(c-b) a = c; else b = c; end
   zk = c;
   if (abs(sol - zk)) <= min && it ~= 1
       break
   else
       it = it + 1;
   end
+end
+end
+
+function C = mynonlinsolvers(f, fp, a, b, solver, iter)
+
+C = zeros(1,iter);    % kolejne oszacowania miejsca zerowego 
+c = a;                % pierwsze oszacowanie
+
+for i = 1 : iter
+  fa = feval(f,a); fb=feval(f,b); fc=feval(f,c); fpc=feval(fp,c);  % oblicz
+  switch(solver)
+    case 'bisection',
+        if( fa*fc<0 ) b=c; else a=c; end
+        c = (a+b)/2;
+    case 'regula-falsi',
+        if( fa*fc<0 ) b=c; else a=c; end
+        c = b-fb*(b-a)/(fb-fa);
+    case 'newton-raphson',
+        c = c-fc/fpc;
+    case 'sieczne',
+        c = b - (fb*(b-a))/(fb-fa);
+        if abs(c-a) < abs(c-b) a = c; else b = c; end
+  otherwise,
+      error('Brak metody');
+  end
+  C(i)=c;  % zapamietaj
 end
 end

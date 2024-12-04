@@ -10,11 +10,10 @@ x = 0 : 0.01 : 2*pi;
 % figure; plot( x, f(x), 'b-', x, fp(x),'r-'); grid; xlabel('x'); title('f(x), fp(x)');
 % legend('Funkcja','Jej pochodna'); pause
 
-cb = nonlinsolvers( f, fp, a, b, 'bisection', it );
-% figure; plot( 1:it,cb,'o-'); xlabel('iter'); title('c(iter)')
+cr = nonlinsolvers( f, fp, a, b, 'regula-falsi', it );
+% figure; plot( 1:it,cr,'o-'); xlabel('iter'); title('c(iter)')
 
-blad = abs(pi - cb(it));
-ek = (b-a)/(2^(it));
+blad = abs(pi - cr(it));
 
 fprintf("blad: %.6f\n",blad);
 % fprintf("zbieznosc liniowa: %.6f\n",ek)
@@ -60,14 +59,13 @@ figure;
 plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80');
 
 [p1, k1] = nonlinsolversWhile(fc,fcp,a,b,x0);
-fprintf("45 stopni wynik = %.6f : liczba iteracji: %d\n",p1,k1);
+fprintf("45 stopni: wynik: %.6f, liczba iteracji: %d\n",p1,k1);
 [p2, k2] = nonlinsolversWhile(fk,fkp,a,b,x0);
 fprintf("10 stopni wynik = %.6f : liczba iteracji: %d\n",p2,k2);
 [p3, k3] = nonlinsolversWhile(fs,fsp,a,b,x0);
 fprintf("80 stopni wynik = %.6f : liczba iteracji: %d\n",p3,k3);
 
-% wychodzi na to, ze nachylenie krzywej wokol miejsca zerowego nie ma
-% znaczenia gdy stosujemy metode bisekcji
+
 
 % bez podania liczby iteracji, blad = 0.001%
 function [zk,it] = nonlinsolversWhile(f, fp, a, b, sol)
@@ -80,7 +78,7 @@ c = a;
 while (abs(sol - zk) > min)
   fa = feval(f,a); fb=feval(f,b); fc=feval(f,c); fpc=feval(fp,c);  % oblicz
   if( fa*fc<0 ) b=c; else a=c; end
-  c = (a+b)/2;
+  c = b-fb*(b-a)/(fb-fa);
   zk = c;
   if (abs(sol - zk)) <= min && it ~= 1
       break
