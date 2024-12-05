@@ -1,6 +1,6 @@
 clear all; close all;
 x0 = 2;
-fprintf("Miejsce zerowe = %d",x0);
+fprintf("Miejsce zerowe = %d\n",x0);
 fprintf("Porownanie: \n");
 
 % 45 stopni
@@ -22,8 +22,19 @@ kat = 80;
 fs = @(x) 4*x.^2 +10.33*x - 36.66;
 fsp = @(x) 8*x + 10.33;
 
+it = 12;
+
 a = 1.9; b = 2.4;
 x = 1:0.01:4;
+
+
+figure;
+plot( x, fc(x), 'b-',x,stc(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 45');
+figure;
+plot(x, fk(x), 'b-',x,stp(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 10');
+figure;
+plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80'); ylim([-10 20]);
+
 for i = 1:3
     switch(i)
         case 1
@@ -33,7 +44,7 @@ for i = 1:3
         case 3
             metoda = 'sieczne';
     end
-
+    
     fprintf("Metoda: %s\n",metoda);
     [p1, k1] = nonlinsolversWhile(fc,fcp,a,b,metoda,x0);
     fprintf("45 stopni wynik = %.6f : liczba iteracji: %d\n",p1,k1);
@@ -41,7 +52,14 @@ for i = 1:3
     fprintf("10 stopni wynik = %.6f : liczba iteracji: %d\n",p2,k2);
     [p3, k3] = nonlinsolversWhile(fs,fsp,a,b,metoda,x0);
     fprintf("80 stopni wynik = %.6f : liczba iteracji: %d\n",p3,k3);
+
+    cb = mynonlinsolvers( fc, fcp, a, b, metoda, it );
+    cr = mynonlinsolvers( fk, fkp, a, b, metoda, it);
+    cn = mynonlinsolvers( fs, fsp, a, b, metoda, it);
+    figure; plot( 1:it,cb,'o-', 1:it,cr,'*', 1:it,cn,'^-'); xlabel('iter'); title('iteracje metoda: ',metoda);
+    grid on, legend('45 stopni','10 stopni','80 stopni'); pause;
 end
+
 
 function [zk,it] = nonlinsolversWhile(f, fp, a, b, solver, sol)
 it = 1;

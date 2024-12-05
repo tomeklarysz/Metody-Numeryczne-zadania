@@ -16,7 +16,7 @@ cr = mynonlinsolvers( f, fp, a, b, 'sieczne', it );
 blad = abs(pi - cr(it));
 fprintf("blad: %.6f\n",blad);
 
-a  = pi-pi/5; b=pi+pi/5;
+a  = pi-pi/10; b=pi+pi/5;
 [cd,k] = nonlinsolversWhile(f, fp, a, b, pi);
 fprintf("wyznaczone miejsce zerowe: %.6f\n",cd);
 fprintf("blad: %.7f - %.7f = %.6f\n",cd,pi,abs(pi - cd));
@@ -45,16 +45,17 @@ stp = @(x) tan(10)*(x-x0) + fc(x0);
 kat = 80;
 fs = @(x) 4*x.^2 +10.33*x - 36.66;
 fsp = @(x) 8*x + 10.33;
+sts = @(x) fsp(x0)*(x-x0) + fs(x0);
 
 a = 1.9; b = 2.4;
 x = 1:0.01:4;
 
-figure;
-plot( x, fc(x), 'b-',x,stc(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 45');
-figure;
-plot(x, fk(x), 'b-',x,stp(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 10');
-figure;
-plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80');
+% figure;
+% plot( x, fc(x), 'b-',x,stc(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 45');
+% figure;
+% plot(x, fk(x), 'b-',x,stp(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 10');
+% figure;
+% plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80');
 
 [p1, k1] = nonlinsolversWhile(fc,fcp,a,b,x0);
 fprintf("45 stopni: wynik: %.6f, liczba iteracji: %d\n",p1,k1);
@@ -74,7 +75,6 @@ min = sol * dok;
 c = a;
 while (abs(sol - zk) > min)
   fa = feval(f,a); fb=feval(f,b); fc=feval(f,c); fpc=feval(fp,c);  % oblicz
-  if( fa*fc<0 ) b=c; else a=c; end
   c = b - (fb*(b-a))/(fb-fa);
   if abs(c-a) < abs(c-b) a = c; else b = c; end
   zk = c;

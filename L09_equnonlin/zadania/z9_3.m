@@ -47,16 +47,18 @@ stp = @(x) tan(10)*(x-x0) + fc(x0);
 kat = 80;
 fs = @(x) 4*x.^2 +10.33*x - 36.66;
 fsp = @(x) 8*x + 10.33;
+sts = @(x) fsp(x0)*(x-x0) + fs(x0);
 
 a = 1.9; b = 2.4;
-x = 1:0.01:4;
+x = 1:0.01:3;
 
-figure;
-plot( x, fc(x), 'b-',x,stc(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 45');
-figure;
-plot(x, fk(x), 'b-',x,stp(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 10');
-figure;
-plot(x, fs(x), 'b-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80');
+% figure;
+% plot( x, fc(x), 'b-',x,stc(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 45');
+% figure;
+% plot(x, fk(x), 'b-',x,stp(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), styczna w x0 = 2 kąt 10');
+% figure;
+% % x = -10:0.01:10;
+% plot(x, fs(x), 'b-',x,sts(x),'r-',x0,0,'bo'); grid; xlabel('x'); title('f(x), x0 = 2 kąt 80'); ylim([-10 20]);
 
 [p1, k1] = nonlinsolversWhile(fc,fcp,a,b,x0);
 fprintf("45 stopni: wynik: %.6f, liczba iteracji: %d\n",p1,k1);
